@@ -90,11 +90,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Verify every claim. Map every source. Synthesize complex literature with surgical precision.",
+          "SourceIQ is an AI research workspace that verifies sources, analyzes articles, and generates trustworthy study material.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#080a12" },
+      { name: "twitter:title", content: "SourceIQ — AI research for the critical mind" },
+      { name: "twitter:description", content: "SourceIQ is an AI research workspace that verifies sources, analyzes articles, and generates trustworthy study material." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/44HLUwshrcQiQ1bk9gez5NKBM6l2/social-images/social-1783796540931-Generate__Premium_minimalist_vector_logo_for__SourceIQ__AI_web_application._Clean_geometric_hexagon_icon_containing_seamlessly_merged_document,_magnifying_glass,_and_checkmark_symbols_integrated_into_single_c.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/44HLUwshrcQiQ1bk9gez5NKBM6l2/social-images/social-1783796540931-Generate__Premium_minimalist_vector_logo_for__SourceIQ__AI_web_application._Clean_geometric_hexagon_icon_containing_seamlessly_merged_document,_magnifying_glass,_and_checkmark_symbols_integrated_into_single_c.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
