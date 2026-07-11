@@ -254,7 +254,7 @@ export const generateStudyMaterial = createServerFn({ method: "POST" })
         article_id: article.id,
         user_id: context.userId,
         kind: data.kind,
-        content: content as Record<string, unknown>,
+        content: content as never,
       })
       .select()
       .single();
