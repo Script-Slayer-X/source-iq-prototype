@@ -225,6 +225,36 @@ html {
   animation: shimmer 1.6s linear infinite;
 }
 
+@utility elevation-1 { box-shadow: var(--shadow-e1); }
+@utility elevation-2 { box-shadow: var(--shadow-e2); }
+@utility elevation-3 { box-shadow: var(--shadow-e3); }
+@utility elevation-4 { box-shadow: var(--shadow-e4); }
+@utility elevation-5 { box-shadow: var(--shadow-e5); }
+@utility glow-accent { box-shadow: var(--shadow-glow); }
+
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-md);
+  }
+}
+
+@utility animate-pulse-glow {
+  animation: pulse-glow 2s var(--ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
