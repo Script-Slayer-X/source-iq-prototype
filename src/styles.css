@@ -47,7 +47,37 @@
   --font-mono: "JetBrains Mono", monospace;
   --font-sans: "Inter", sans-serif;
 
+  /* Motion — durations */
+  --duration-instant: 80ms;
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --duration-slower: 640ms;
+  --duration-reveal: 800ms;
+
+  /* Motion — easings */
   --ease-out-scholar: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Semantic status colors (surface accents) */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Elevation shadows — deep, moody */
+  --shadow-e0: none;
+  --shadow-e1: 0 1px 2px 0 hsl(230 40% 2% / 0.4);
+  --shadow-e2: 0 4px 12px -4px hsl(230 40% 2% / 0.55);
+  --shadow-e3: 0 12px 32px -12px hsl(230 40% 2% / 0.65);
+  --shadow-e4: 0 20px 60px -20px hsl(230 40% 2% / 0.75);
+  --shadow-e5: 0 40px 120px -30px hsl(230 40% 2% / 0.85);
+  --shadow-focus: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+  --shadow-glow: 0 0 40px -8px hsl(185 90% 65% / 0.35);
 }
 
 :root,
