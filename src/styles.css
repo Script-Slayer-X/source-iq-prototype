@@ -47,7 +47,37 @@
   --font-mono: "JetBrains Mono", monospace;
   --font-sans: "Inter", sans-serif;
 
+  /* Motion — durations */
+  --duration-instant: 80ms;
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
+  --duration-slower: 640ms;
+  --duration-reveal: 800ms;
+
+  /* Motion — easings */
   --ease-out-scholar: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Semantic status colors (surface accents) */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Elevation shadows — deep, moody */
+  --shadow-e0: none;
+  --shadow-e1: 0 1px 2px 0 hsl(230 40% 2% / 0.4);
+  --shadow-e2: 0 4px 12px -4px hsl(230 40% 2% / 0.55);
+  --shadow-e3: 0 12px 32px -12px hsl(230 40% 2% / 0.65);
+  --shadow-e4: 0 20px 60px -20px hsl(230 40% 2% / 0.75);
+  --shadow-e5: 0 40px 120px -30px hsl(230 40% 2% / 0.85);
+  --shadow-focus: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+  --shadow-glow: 0 0 40px -8px hsl(185 90% 65% / 0.35);
 }
 
 :root,
@@ -78,6 +108,13 @@
   --destructive: hsl(0 75% 60%);
   --destructive-foreground: hsl(230 10% 98%);
 
+  --success: hsl(155 65% 55%);
+  --success-foreground: hsl(155 40% 8%);
+  --warning: hsl(38 92% 62%);
+  --warning-foreground: hsl(38 40% 8%);
+  --info: hsl(210 90% 66%);
+  --info-foreground: hsl(210 40% 8%);
+
   --border: hsl(230 10% 100% / 0.08);
   --input: hsl(230 10% 100% / 0.08);
   --ring: hsl(185 90% 65% / 0.5);
@@ -92,13 +129,54 @@
   --sidebar-ring: hsl(185 90% 65% / 0.5);
 }
 
+/* Optional light theme — enabled by adding class="light" on <html> */
+.light {
+  --background: hsl(40 20% 98%);
+  --foreground: hsl(230 25% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(230 25% 10%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(230 25% 10%);
+  --primary: hsl(185 75% 38%);
+  --primary-foreground: hsl(40 20% 98%);
+  --secondary: hsl(230 15% 94%);
+  --secondary-foreground: hsl(230 25% 10%);
+  --muted: hsl(230 15% 94%);
+  --muted-foreground: hsl(230 10% 40%);
+  --accent: hsl(185 75% 38%);
+  --accent-foreground: hsl(40 20% 98%);
+  --destructive: hsl(0 70% 48%);
+  --destructive-foreground: hsl(40 20% 98%);
+  --success: hsl(155 55% 38%);
+  --success-foreground: hsl(40 20% 98%);
+  --warning: hsl(38 85% 45%);
+  --warning-foreground: hsl(40 20% 98%);
+  --info: hsl(210 80% 48%);
+  --info-foreground: hsl(40 20% 98%);
+  --border: hsl(230 15% 88%);
+  --input: hsl(230 15% 88%);
+  --ring: hsl(185 75% 38% / 0.4);
+  --sidebar: hsl(40 20% 96%);
+  --sidebar-foreground: hsl(230 25% 15%);
+  --sidebar-primary: hsl(185 75% 38%);
+  --sidebar-primary-foreground: hsl(40 20% 98%);
+  --sidebar-accent: hsl(230 15% 92%);
+  --sidebar-accent-foreground: hsl(230 25% 10%);
+  --sidebar-border: hsl(230 15% 86%);
+  --sidebar-ring: hsl(185 75% 38% / 0.4);
+}
+
 html,
 body {
   color-scheme: dark;
 }
+.light,
+.light body {
+  color-scheme: light;
+}
 
 html {
-  background-color: hsl(230 20% 3%);
+  background-color: var(--background);
 }
 
 @keyframes reveal {
@@ -121,6 +199,11 @@ html {
   }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(185 90% 65% / 0.3); }
+  50% { box-shadow: 0 0 0 8px hsl(185 90% 65% / 0); }
+}
+
 @utility animate-reveal {
   animation: reveal 0.8s var(--ease-out-scholar) both;
 }
@@ -140,6 +223,36 @@ html {
   );
   background-size: 400px 100%;
   animation: shimmer 1.6s linear infinite;
+}
+
+@utility elevation-1 { box-shadow: var(--shadow-e1); }
+@utility elevation-2 { box-shadow: var(--shadow-e2); }
+@utility elevation-3 { box-shadow: var(--shadow-e3); }
+@utility elevation-4 { box-shadow: var(--shadow-e4); }
+@utility elevation-5 { box-shadow: var(--shadow-e5); }
+@utility glow-accent { box-shadow: var(--shadow-glow); }
+
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-md);
+  }
+}
+
+@utility animate-pulse-glow {
+  animation: pulse-glow 2s var(--ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer base {
