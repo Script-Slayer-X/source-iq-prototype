@@ -108,6 +108,13 @@
   --destructive: hsl(0 75% 60%);
   --destructive-foreground: hsl(230 10% 98%);
 
+  --success: hsl(155 65% 55%);
+  --success-foreground: hsl(155 40% 8%);
+  --warning: hsl(38 92% 62%);
+  --warning-foreground: hsl(38 40% 8%);
+  --info: hsl(210 90% 66%);
+  --info-foreground: hsl(210 40% 8%);
+
   --border: hsl(230 10% 100% / 0.08);
   --input: hsl(230 10% 100% / 0.08);
   --ring: hsl(185 90% 65% / 0.5);
@@ -122,13 +129,54 @@
   --sidebar-ring: hsl(185 90% 65% / 0.5);
 }
 
+/* Optional light theme — enabled by adding class="light" on <html> */
+.light {
+  --background: hsl(40 20% 98%);
+  --foreground: hsl(230 25% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(230 25% 10%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(230 25% 10%);
+  --primary: hsl(185 75% 38%);
+  --primary-foreground: hsl(40 20% 98%);
+  --secondary: hsl(230 15% 94%);
+  --secondary-foreground: hsl(230 25% 10%);
+  --muted: hsl(230 15% 94%);
+  --muted-foreground: hsl(230 10% 40%);
+  --accent: hsl(185 75% 38%);
+  --accent-foreground: hsl(40 20% 98%);
+  --destructive: hsl(0 70% 48%);
+  --destructive-foreground: hsl(40 20% 98%);
+  --success: hsl(155 55% 38%);
+  --success-foreground: hsl(40 20% 98%);
+  --warning: hsl(38 85% 45%);
+  --warning-foreground: hsl(40 20% 98%);
+  --info: hsl(210 80% 48%);
+  --info-foreground: hsl(40 20% 98%);
+  --border: hsl(230 15% 88%);
+  --input: hsl(230 15% 88%);
+  --ring: hsl(185 75% 38% / 0.4);
+  --sidebar: hsl(40 20% 96%);
+  --sidebar-foreground: hsl(230 25% 15%);
+  --sidebar-primary: hsl(185 75% 38%);
+  --sidebar-primary-foreground: hsl(40 20% 98%);
+  --sidebar-accent: hsl(230 15% 92%);
+  --sidebar-accent-foreground: hsl(230 25% 10%);
+  --sidebar-border: hsl(230 15% 86%);
+  --sidebar-ring: hsl(185 75% 38% / 0.4);
+}
+
 html,
 body {
   color-scheme: dark;
 }
+.light,
+.light body {
+  color-scheme: light;
+}
 
 html {
-  background-color: hsl(230 20% 3%);
+  background-color: var(--background);
 }
 
 @keyframes reveal {
@@ -149,6 +197,11 @@ html {
   100% {
     background-position: 400px 0;
   }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(185 90% 65% / 0.3); }
+  50% { box-shadow: 0 0 0 8px hsl(185 90% 65% / 0); }
 }
 
 @utility animate-reveal {
