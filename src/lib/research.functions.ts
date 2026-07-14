@@ -91,6 +91,14 @@ export const ingestArticle = createServerFn({ method: "POST" })
       }
     }
 
+    if (!content || content.trim().length < 80) {
+      throw new Error(
+        "The extracted content is too short to analyze. Some sites (YouTube, apps, paywalls) block readers — paste the transcript or article text instead.",
+      );
+    }
+
+
+
     const { data: article, error } = await context.supabase
       .from("articles")
       .insert({
