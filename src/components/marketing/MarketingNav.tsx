@@ -21,14 +21,14 @@ export function MarketingNav() {
           : "border-transparent bg-transparent",
       )}
     >
-      <Link to="/" className="flex items-center gap-2">
-        <span
-          aria-hidden
-          className="size-6 rounded bg-accent blur-[2px] opacity-80"
+      <Link to="/" className="flex items-center gap-2" aria-label="SourceIQ home">
+        <img
+          src={logo}
+          alt="SourceIQ"
+          className="h-8 w-auto md:h-9"
+          width={200}
+          height={64}
         />
-        <span className="font-display text-xl italic tracking-tight">
-          SourceIQ
-        </span>
       </Link>
       <div className="hidden gap-8 text-sm font-medium text-muted-foreground md:flex">
         <a href="#platform" className="transition-colors hover:text-accent">
