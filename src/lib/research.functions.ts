@@ -264,21 +264,21 @@ export const generateStudyMaterial = createServerFn({ method: "POST" })
         const { output } = await generateText({
           model,
           output: Output.object({ schema: flashcardsSchema }),
-          prompt: `${base}\nGenerate 8-12 high-quality study flashcards. Front is a precise question or term; back is a concise, self-contained answer.`,
+          prompt: `${base}\nGenerate 8-12 high-quality study flashcards. Return ONLY JSON: { "cards": [ { "front": string, "back": string } ] }. Front is a precise question or term; back is a concise self-contained answer. Use exact key names "cards", "front", "back".`,
         });
         content = output;
       } else if (data.kind === "summary") {
         const { output } = await generateText({
           model,
           output: Output.object({ schema: summarySchema }),
-          prompt: `${base}\nProduce a rigorous executive summary suitable for a lit-review: headline, 4-6 key points, and a short outline of subtopics.`,
+          prompt: `${base}\nProduce a rigorous executive summary. Return ONLY JSON: { "headline": string, "key_points": [string, ...4-6 items], "outline": [ { "heading": string, "detail": string } ] }. Use exact key names.`,
         });
         content = output;
       } else {
         const { output } = await generateText({
           model,
           output: Output.object({ schema: quizSchema }),
-          prompt: `${base}\nGenerate 5-8 multiple-choice questions testing comprehension. Provide 4 options, answer_index (0-based), and a one-sentence explanation.`,
+          prompt: `${base}\nGenerate 5-8 multiple-choice questions testing comprehension. Return ONLY JSON: { "questions": [ { "question": string, "options": [string, string, string, string], "answer_index": integer 0-3, "explanation": string } ] }. Use exact key names "questions", "options", "answer_index", "explanation".`,
         });
         content = output;
       }
