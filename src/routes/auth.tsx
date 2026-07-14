@@ -105,7 +105,7 @@ function AuthPage() {
           aria-label="Back to SourceIQ home"
         >
           <img
-            src={new URL("../assets/sourceiq-logo.jpg", import.meta.url).href}
+            src={new URL("../assets/sourceiq-logo.png", import.meta.url).href}
             alt="SourceIQ"
             className="h-8 w-auto"
           />
