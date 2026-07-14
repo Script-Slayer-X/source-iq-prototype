@@ -45,22 +45,59 @@ export const ingestArticle = createServerFn({ method: "POST" })
     let sourceUrl: string | null = data.url ?? null;
 
     if (!content && data.url) {
-      const res = await fetch(data.url, {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (compatible; SourceIQ/1.0; +https://sourceiq.app)",
-        },
-      });
-      if (!res.ok) throw new Error(`Failed to fetch URL (${res.status})`);
-      const html = await res.text();
-      const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-      if (!data.title && titleMatch) title = titleMatch[1].trim();
-      content = htmlToText(html).slice(0, 60000);
+      let hostname = "";
+      try {
+        hostname = new URL(data.url).hostname.replace(/^www\./, "");
+      } catch {
+        throw new Error("That doesn't look like a valid URL. Please paste a full https:// link.");
+      }
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 20000);
+        const res = await fetch(data.url, {
+          signal: controller.signal,
+          redirect: "follow",
+          headers: {
+            "User-Agent":
+              "Mozilla/5.0 (compatible; SourceIQ/1.0; +https://sourceiq.app)",
+            Accept:
+              "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+          },
+        });
+        clearTimeout(timer);
+        if (!res.ok) {
+          throw new Error(
+            `Couldn't fetch ${hostname} (HTTP ${res.status}). The site may block automated readers — try pasting the article text instead.`,
+          );
+        }
+        const ctype = res.headers.get("content-type") ?? "";
+        if (!ctype.includes("html") && !ctype.includes("text")) {
+          throw new Error(
+            `${hostname} returned ${ctype || "an unsupported format"}. Paste the article text instead.`,
+          );
+        }
+        const html = await res.text();
+        const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+        if (!data.title && titleMatch) title = titleMatch[1].trim();
+        // Prefer OG description as a fallback signal, then strip tags.
+        content = htmlToText(html).slice(0, 60000);
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
+          throw new Error(`${hostname} took too long to respond. Try again or paste the text.`);
+        }
+        if (err instanceof Error) throw err;
+        throw new Error(`Failed to fetch ${hostname}. Try pasting the article text instead.`);
+      }
     }
 
-    if (!content || content.length < 40) {
-      throw new Error("Article content is too short to analyze.");
+    if (!content || content.trim().length < 80) {
+      throw new Error(
+        "The extracted content is too short to analyze. Some sites (YouTube, apps, paywalls) block readers — paste the transcript or article text instead.",
+      );
     }
+
+
 
     const { data: article, error } = await context.supabase
       .from("articles")
