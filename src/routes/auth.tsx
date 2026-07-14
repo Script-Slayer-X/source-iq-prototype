@@ -102,9 +102,13 @@ function AuthPage() {
         <Link
           to="/"
           className="mb-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+          aria-label="Back to SourceIQ home"
         >
-          <span aria-hidden className="size-5 rounded bg-accent blur-[2px] opacity-80" />
-          <span className="font-display text-lg italic">SourceIQ</span>
+          <img
+            src={new URL("../assets/sourceiq-logo.jpg", import.meta.url).href}
+            alt="SourceIQ"
+            className="h-8 w-auto"
+          />
         </Link>
 
         <GlassPanel className="p-8">
