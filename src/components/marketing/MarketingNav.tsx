@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/sourceiq-logo.jpg";
+import logo from "@/assets/sourceiq-logo.png";
 
 export function MarketingNav() {
   const [scrolled, setScrolled] = useState(false);

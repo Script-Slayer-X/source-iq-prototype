@@ -158,21 +158,25 @@ export const analyzeArticle = createServerFn({ method: "POST" })
     if (error || !article) throw new Error("Article not found");
 
     const model = getModel();
-    const prompt = `You are SourceIQ, a rigorous research analyst. Analyze this article for factual integrity, bias, and evidence quality. Return valid JSON matching the schema.
+    const prompt = `You are SourceIQ, a rigorous research analyst. Analyze this article for factual integrity, bias, and evidence quality.
+
+Return ONLY a JSON object with EXACTLY these top-level keys — no extra keys, no markdown, no prose outside JSON:
+{
+  "summary": string (under 120 words),
+  "trust_score": integer 0-100,
+  "claims": [ { "text": string, "verdict": "Supported"|"Contested"|"Unverified"|"False", "confidence": number 0-1, "rationale": string } ]  // up to 6
+  "bias_flags": [ { "type": "emotional-language"|"cherry-picking"|"source-selection"|"appeal-to-authority"|"false-balance"|"unstated-assumption", "quote": string, "note": string } ]  // up to 4
+  "sources": [ { "title": string, "url": string (real https URL), "why": string } ]  // up to 5
+}
+
+IMPORTANT: use the exact key names above ("claims" not "major_claims", "sources" not "cross_reference_sources", "text" not "claim", "rationale" not "reasoning").
 
 Article title: ${article.title}
 Article source: ${article.source_url ?? "user-provided text"}
 Article content:
 """
 ${(article.content as string).slice(0, 20000)}
-"""
-
-Rules:
-- trust_score is an integer 0-100 reflecting evidence quality, verifiability, and neutrality.
-- List up to 6 major claims with verdict (Supported / Contested / Unverified / False), confidence 0-1, and a short rationale.
-- Flag up to 4 bias signals (emotional-language, cherry-picking, source-selection, appeal-to-authority, false-balance, unstated-assumption) with a short quote and note.
-- Suggest up to 5 authoritative cross-reference sources (real, plausible URLs) with why each is relevant.
-- Keep summary under 120 words.`;
+"""`;
 
     try {
       const { output } = await generateText({
@@ -260,21 +264,21 @@ export const generateStudyMaterial = createServerFn({ method: "POST" })
         const { output } = await generateText({
           model,
           output: Output.object({ schema: flashcardsSchema }),
-          prompt: `${base}\nGenerate 8-12 high-quality study flashcards. Front is a precise question or term; back is a concise, self-contained answer.`,
+          prompt: `${base}\nGenerate 8-12 high-quality study flashcards. Return ONLY JSON: { "cards": [ { "front": string, "back": string } ] }. Front is a precise question or term; back is a concise self-contained answer. Use exact key names "cards", "front", "back".`,
         });
         content = output;
       } else if (data.kind === "summary") {
         const { output } = await generateText({
           model,
           output: Output.object({ schema: summarySchema }),
-          prompt: `${base}\nProduce a rigorous executive summary suitable for a lit-review: headline, 4-6 key points, and a short outline of subtopics.`,
+          prompt: `${base}\nProduce a rigorous executive summary. Return ONLY JSON: { "headline": string, "key_points": [string, ...4-6 items], "outline": [ { "heading": string, "detail": string } ] }. Use exact key names.`,
         });
         content = output;
       } else {
         const { output } = await generateText({
           model,
           output: Output.object({ schema: quizSchema }),
-          prompt: `${base}\nGenerate 5-8 multiple-choice questions testing comprehension. Provide 4 options, answer_index (0-based), and a one-sentence explanation.`,
+          prompt: `${base}\nGenerate 5-8 multiple-choice questions testing comprehension. Return ONLY JSON: { "questions": [ { "question": string, "options": [string, string, string, string], "answer_index": integer 0-3, "explanation": string } ] }. Use exact key names "questions", "options", "answer_index", "explanation".`,
         });
         content = output;
       }
