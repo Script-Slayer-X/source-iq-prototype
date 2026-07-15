@@ -95,7 +95,7 @@ function StudyResult({ set }: { set: StudySet }) {
     return (
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {(c.cards as { front: string; back: string }[]).map((card, i) => (
-          <Flashcard key={i} front={card.front} back={card.back} />
+          <Flashcard key={`${set.id}-${i}`} front={card.front} back={card.back} />
         ))}
       </div>
     );
@@ -131,7 +131,7 @@ function StudyResult({ set }: { set: StudySet }) {
             explanation: string;
           }[]
         ).map((q, i) => (
-          <QuizCard key={i} q={q} />
+          <QuizCard key={`${set.id}-${i}`} q={q} />
         ))}
       </div>
     );
