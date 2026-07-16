@@ -109,10 +109,33 @@ export function ArticleIngestForm({ projectId }: { projectId?: string | null }) 
             <Input
               id="url"
               type="url"
+              inputMode="url"
+              autoComplete="url"
+              spellCheck={false}
               placeholder="https://example.com/research/..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              onPaste={(e) => {
+                const pasted = e.clipboardData.getData("text").trim();
+                if (pasted) {
+                  e.preventDefault();
+                  setUrl(pasted);
+                }
+              }}
+              aria-invalid={url.length > 0 && !platform.valid}
             />
+            {platform.hint ? (
+              <p
+                className={`flex items-start gap-1.5 text-xs ${platform.hint.level === "warn" ? "text-amber-400" : "text-muted-foreground"}`}
+              >
+                {platform.hint.level === "warn" ? (
+                  <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
+                ) : (
+                  <Info className="mt-0.5 size-3.5 shrink-0" />
+                )}
+                <span>{platform.hint.message}</span>
+              </p>
+            ) : null}
           </div>
         </TabsContent>
         <TabsContent value="text" className="mt-4 space-y-3">
