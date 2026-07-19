@@ -9,6 +9,9 @@ import { GlassPanel } from "@/components/common/GlassPanel";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — SourceIQ" },
@@ -23,17 +26,31 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Where to send the user after a successful auth. `next` is validated to be
+  // a same-origin relative path in validateSearch, so it's safe to use here
+  // and via window.location for the consent round-trip.
+  const returnTo = next ?? "/app";
+  const absoluteReturn =
+    typeof window !== "undefined" ? new URL(returnTo, window.location.origin).href : returnTo;
+
+  function goHome() {
+    if (next) window.location.href = returnTo;
+    else navigate({ to: "/app" });
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/app" });
+      if (data.session) goHome();
     });
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,20 +61,20 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: absoluteReturn,
             data: { full_name: displayName || undefined },
           },
         });
         if (error) throw error;
         toast.success("Account created. You're signed in.");
-        navigate({ to: "/app" });
+        goHome();
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        navigate({ to: "/app" });
+        goHome();
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
@@ -70,10 +87,10 @@ function AuthPage() {
     setLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: absoluteReturn,
       });
       if (result.error) throw result.error;
-      if (!result.redirected) navigate({ to: "/app" });
+      if (!result.redirected) goHome();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Sign-in failed");
       setLoading(false);
